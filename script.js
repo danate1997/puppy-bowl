@@ -1,32 +1,41 @@
-// Use the API_URL variable to make fetch requests to the API.
-// Replace the placeholder with your cohort name (ex: 2109-UNF-HY-WEB-PT)
-const cohortName = "YOUR COHORT NAME HERE";
-const API_URL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}`;
+// let wrapper = document.querySelector(".wrapper");
+// console.log(wrapper);
 
-/**
- * Fetches all players from the API.
- * @returns {Object[]} the array of player objects
- */
-const fetchAllPlayers = async () => {
-  try {
-    // TODO
-  } catch (err) {
-    console.error("Uh oh, trouble fetching players!", err);
-  }
-};
+async function fetchAllPlayers() {
+  const response = await fetch(`https://fsa-puppy-bowl.herokuapp.com/api/2307-fsa-et-web-sf/players`);
+  const data = await response.json();
+  return data.data.players;
+}
+console.log(fetchAllPlayers())
 
-/**
- * Fetches a single player from the API.
- * @param {number} playerId
- * @returns {Object} the player object
- */
-const fetchSinglePlayer = async (playerId) => {
-  try {
-    // TODO
-  } catch (err) {
-    console.error(`Oh no, trouble fetching player #${playerId}!`, err);
+async function fetchSinglePlayer(id) {
+  try{
+    const response = await fetch(`https://fsa-puppy-bowl.herokuapp.com/api/2307-fsa-et-web-sf/players/`+id+`/`);
+    const data = await response.json();
+    return data.data.player
+  }catch{
+    console.log("error")
   }
-};
+}
+console.log(fetchSinglePlayer(737))
+
+function createElement(dt) {
+  this.element=document.createElement("div");
+
+  this.name= document.createElement("h1");
+  //this.name.innerHTML=dt.name;
+  this.id= document.createElement("h2");
+  this.id.innerHTML=dt.id;
+  this.image= document.createElement("img");
+  this.image.src = dt.imageUrl;
+  this.image.alt = dt.name;
+
+  this.element.append(this.name);
+  this.element.appendChild(this.id);
+  this.element.appendChild(this.image);
+
+  document.querySelector(".wrapper").appendChild(element);
+} 
 
 /**
  * Updates `<main>` to display a list of all players.
@@ -47,10 +56,25 @@ const fetchSinglePlayer = async (playerId) => {
  * Note: this function should replace the current contents of `<main>`, not append to it.
  * @param {Object[]} playerList - an array of player objects
  */
-const renderAllPlayers = (playerList) => {
-  // TODO
-};
+function renderAllPlayers() {
+  document.querySelector(".wrapper").innerHTML="";
+  fetchAllPlayers().then(response=>{
+    response.forEach((i) =>{
+      createElement(i)
+    })
+  })
+}
 
+function renderSinglePlayer(id) {
+  document.querySelector(".wrapper").innerHTML="";
+  fetchSinglePlayer(id).then(response=>{
+    createElement(response)
+  })
+}
+
+document.getElementById("button").addEventListener("click", function() {
+  renderAllPlayers();
+})
 /**
  * Updates `<main>` to display a single player.
  * The player is displayed in a card with the following information:
@@ -64,16 +88,13 @@ const renderAllPlayers = (playerList) => {
  * will call `renderAllPlayers` to re-render the full list of players.
  * @param {Object} player an object representing a single player
  */
-const renderSinglePlayer = (player) => {
-  // TODO
-};
 
 /**
  * Initializes the app by fetching all players and rendering them to the DOM.
  */
 const init = async () => {
   const players = await fetchAllPlayers();
-  renderAllPlayers(players);
+  renderAllPlayers();
 
 };
 
